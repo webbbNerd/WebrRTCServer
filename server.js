@@ -3,19 +3,25 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const socket = require("socket.io");
+const DB = require("./database");
 
 const io = socket(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
-var cors = require('cors');
+var cors = require("cors");
+
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
 
 const users = {};
 
-app.use(cors())
+app.use(cors());
 
+DB();
 // app.use(cors({origin: ['https://localhost:3000', 'https://127.0.0.1:3000']}));
 
 io.on("connection", (socket) => {
@@ -45,5 +51,11 @@ io.on("connection", (socket) => {
     socket.to(data.to).emit("candidate", data.candidate);
   });
 });
+
+const signup = require("./router/auth");
+app.use("/register", signup);
+
+const login = require("./router/login");
+app.use("/login", login);
 
 server.listen(8000, () => console.log("server is running on port 8000"));

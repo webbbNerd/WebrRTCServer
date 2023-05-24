@@ -4,6 +4,8 @@ const app = express();
 const server = http.createServer(app);
 const socket = require("socket.io");
 const DB = require("./database");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config.env" });
 
 const io = socket(server, {
   cors: {

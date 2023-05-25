@@ -14,6 +14,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  uniqueId: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   token: {
     type: String,
   },

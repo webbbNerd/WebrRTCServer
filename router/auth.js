@@ -4,7 +4,6 @@ const User = require("../models/userSchema");
 router.use(express.json());
 
 router.post("/", async (req, res) => {
-  console.log(req.body);
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -18,11 +17,29 @@ router.post("/", async (req, res) => {
     if (userExist) {
       return res.status(422).json({ error: "Email already exist" });
     }
-    const user = new User({ name, email, password });
 
-    await user.save();
+    function generateUniqueId() {
+      const id = Math.floor(100000000 + Math.random() * 900000000).toString();
+      return id;
+    }
 
-    res.status(201).json({ message: "User Registered Successfully" });
+    var uniqueId;
+
+    async function savePersonWithUniqueId() {
+      uniqueId = generateUniqueId();
+      const existingUniqueId = await User.findOne({ uniqueId: uniqueId });
+      if (existingUniqueId) {
+        return savePersonWithUniqueId();
+      }
+      const user = new User({ name, email, password, uniqueId });
+
+      await user.save();
+
+      res.status(201).json({ message: "User Registered Successfully" });
+    }
+
+    // Call the function to save a person with a unique ID
+    savePersonWithUniqueId();
   } catch (err) {
     console.log(err);
   }

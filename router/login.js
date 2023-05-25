@@ -28,8 +28,8 @@ router.post("/", async (req, res) => {
       res.status(400).json({ error: "Invalid Credentials" });
     } else {
       const token = await userLogin.generateAuthToken();
-      res.cookie("jwttoken", token, {
-        expires: new Date(Date.now() + 2580),
+      res.cookie("jwttokenforwebrtc", token, {
+        expires: new Date(Date.now() + 25807238),
         httpOnly: true,
       });
       res.status(200).json({ message: "User Logged In Successfully" });

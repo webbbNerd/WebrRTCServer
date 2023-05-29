@@ -28,11 +28,19 @@ router.post("/", async (req, res) => {
       res.status(400).json({ error: "Invalid Credentials" });
     } else {
       const token = await userLogin.generateAuthToken();
-      res.cookie("jwttokenforwebrtc", token, {
-        expires: new Date(Date.now() + 25807238),
-        httpOnly: true,
+      // let options = {
+      //   maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+      //   httpOnly: true, // The cookie only accessible by the web server
+      //   // signed: true, // Indicates if the cookie should be signed
+      // };
+
+      // // Set cookie
+      // res.cookie("jwttokenforwebrtc", token, options);
+      res.status(200).json({
+        maxAge: 1000 * 60 * 15,
+        token: token,
+        message: "User Logged In Successfully",
       });
-      res.status(200).json({ message: "User Logged In Successfully" });
     }
   } catch (err) {
     console.log(err);
